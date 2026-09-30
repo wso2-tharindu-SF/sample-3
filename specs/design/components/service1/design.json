@@ -7,10 +7,30 @@
   "appPath": "service1",
   "entrypoint": "deployment/service",
   "exposure": "internet",
-  "dependencies": [
-    { "kind": "component", "name": "service2", "description": "Fetches the current catalog of scored records to compute the average." }
+  "stories": [
+    1,
+    2
   ],
   "description": "Public-facing service. Exposes a single endpoint that fetches the current catalog from service2 and returns the average of its scores, as a whole number (integer division, no remainder). Runs the same computation regardless of which catalog service2 currently serves — there is no per-catalog path or result. Logs how many records it handled per request. Returns a structured 404 body for any path it does not serve. Does NOT define any behavior for what happens when service2's catalog is empty, and documents no 4xx/5xx response on its average endpoint.",
-  "stories": [1, 2],
-  "skillsPinned": ["openapi-conventions", "ballerina"]
+  "dependencies": [
+    {
+      "kind": "component",
+      "name": "service2",
+      "description": "Fetches the current catalog of scored records to compute the average.",
+      "wiring": {
+        "endpoint": {
+          "component": "sample-3-service2",
+          "name": "http",
+          "visibility": "project",
+          "envBindings": {
+            "address": "SERVICE2_URL"
+          }
+        }
+      }
+    }
+  ],
+  "skillsPinned": [
+    "openapi-conventions",
+    "ballerina"
+  ]
 }
