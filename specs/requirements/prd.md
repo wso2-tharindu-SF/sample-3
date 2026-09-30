@@ -26,9 +26,9 @@ A two-service system: Service2 holds a catalog of scored records and can be swit
 - **Mode switch**: Service2's internal operations endpoint switches it between full mode (the fixed catalog above) and empty mode (a catalog with no records). This endpoint is internal only and is never reachable by an End User.
 - **Average computation**: Service1 asks Service2 for its current catalog and returns the average score — the sum of every record's score divided by the number of records — as a whole number, discarding any remainder. Against the full catalog this average is 35.
 - **One computation, every catalog**: the same computation runs for whichever catalog Service2 currently serves. There is no separate path, and no separate result, tied to any particular catalog.
-- **Request logging**: both Service1 and Service2 log how many records they handled for each request they serve. *assumed*
+- **Request logging**: both Service1 and Service2 log how many records they handled for each request they serve, as plain operational logging — no query surface or reporting endpoint is provided for these counts.
 - **Unmatched-path errors**: a request to a path Service1 does not serve returns a structured 404 body.
-- **Service1 access**: End Users can reach Service1's average endpoint with no sign-in required — it is a read-only, non-sensitive summary. *assumed*
+- **Service1 access**: End Users can reach Service1's average endpoint with no sign-in required — it is a read-only, non-sensitive summary.
 - **Single documented outcome**: Service1's contract documents exactly one response for its average endpoint — the successful average — plus the structured 404 for paths it does not serve; no other 4xx or 5xx outcome is documented on that endpoint, regardless of cause.
 - **No alternative response shape for empty mode**: neither service's contract adds an empty-catalog variant, an alternative response, or an optional field to accommodate an empty catalog. Empty mode is a fault condition for anything downstream of Service2's catalog, not a documented alternative shape.
 
@@ -37,7 +37,8 @@ A two-service system: Service2 holds a catalog of scored records and can be swit
 - What Service1 returns, computes, or reports when Service2's catalog is empty — no value, default, or error response is defined for that case in this version.
 - Any additional catalog operations beyond serving the current catalog (Service2) and computing its average (Service1).
 - Any End User-facing way to view or switch Service2's mode — that control is internal-only, via Service2's operations endpoint.
-- Any authentication or authorization scheme beyond keeping Service2's operations endpoint unreachable by End Users. *assumed*
+- Any authentication or authorization scheme beyond keeping Service2's operations endpoint unreachable by End Users.
+- A query or reporting surface for the per-request record-count logs — they are operational log output only.
 
 ## Open Questions
 
