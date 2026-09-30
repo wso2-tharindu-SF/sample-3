@@ -15,7 +15,9 @@ service / on ep0 {
         foreach service2:Record item in records {
             total += item.score;
         }
-        int average = total / recordCount;
+        // service2 can legitimately serve an empty catalog (mode="empty");
+        // an average over zero records is defined as 0, not a crash.
+        int average = recordCount > 0 ? total / recordCount : 0;
         log:printInfo("computed average score", recordCount = recordCount);
         return {average: average};
     }
