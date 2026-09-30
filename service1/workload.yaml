@@ -1,0 +1,20 @@
+apiVersion: openchoreo.dev/v1alpha1
+metadata:
+  name: service1
+
+endpoints:
+  - name: http
+    type: HTTP
+    port: 9090
+    basePath: /
+    visibility:
+      - project
+      - external
+
+dependencies:
+  endpoints:
+    - component: sample-3-service2
+      name: http
+      visibility: project
+      envBindings:
+        address: SERVICE2_URL
